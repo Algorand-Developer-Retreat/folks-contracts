@@ -16,6 +16,10 @@ The `AccessControl` contract provides a role-based permission system. It enables
 
 Reference: [OpenZeppelin AccessControl](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/access/AccessControl.sol)
 
+#### Upgradable
+
+The `Upgradable` contract extends `AccessControl` to provide secure, time-delayed upgradeability for Algorand smart contracts. This pattern allows for controlled contract upgrades while maintaining transparency and security through a time-delayed approval process.
+
 ### Structure Guidelines
 
 For consistency across the ecosystem, we recommend the following structure and order
