@@ -1,0 +1,10 @@
+# Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
+_commit: 1.6.0
+_src_path: gh:algorandfoundation/algokit-python-template
+author_email: palazzolo1995@gmail.com
+author_name: palace22
+contract_name: hello_world
+deployment_language: typescript
+preset_name: production
+project_name: folks-contracts
+
