@@ -1,36 +1,49 @@
-from algopy import ARC4Contract, BoxMap, Txn
-from algopy import Bytes, subroutine
+from algopy import ARC4Contract, BoxMap, Txn, op, subroutine
 from algopy.arc4 import Address, Bool, Struct, abimethod, emit
 
 from ..types import Bytes32
 
+
+# Struct
 class AddressRoleKey(Struct):
     role: Bytes32
     address: Address
 
+
+# Events
 class RoleAdminChanged(Struct):
     role: Bytes32
     prev_admin_role: Bytes32
     new_admin_role: Bytes32
+
 
 class RoleGranted(Struct):
     role: Bytes32
     account: Address
     sender: Address
 
+
 class RoleRevoked(Struct):
     role: Bytes32
     account: Address
     sender: Address
 
+
+# Errors
+# ...
+
+
 class AccessControl(ARC4Contract):
+
     def __init__(self) -> None:
         self.roles = BoxMap(Bytes32, Bytes32, key_prefix=b"role_")
-        self.addresses_roles = BoxMap(AddressRoleKey, Bool, key_prefix=b"address_roles_")
+        self.addresses_roles = BoxMap(
+            AddressRoleKey, Bool, key_prefix=b"address_roles_"
+        )
 
     @abimethod(readonly=True)
     def default_admin_role(self) -> Bytes32:
-        return Bytes32.from_bytes(Bytes(b"0000000000000000000000000000000000000000000000000000000000000000"))
+        return Bytes32.from_bytes(op.bzero(32))
 
     @abimethod(readonly=True)
     def has_role(self, role: Bytes32, account: Address) -> Bool:
@@ -61,10 +74,10 @@ class AccessControl(ARC4Contract):
     def grant_role(self, role: Bytes32, account: Address) -> None:
         """Grant a role to an account
 
-          Args:
-              role: The role to grant
-              account: The account to grant the role to
-          """
+        Args:
+            role: The role to grant
+            account: The account to grant the role to
+        """
         self._check_role(self._get_role_admin(role))
         self._grant_role(role, account)
 
@@ -72,10 +85,10 @@ class AccessControl(ARC4Contract):
     def revoke_role(self, role: Bytes32, account: Address) -> None:
         """Revokes a role from an account
 
-          Args:
-              role: The role to revoke
-              account: The account to revoke the role from
-          """
+        Args:
+            role: The role to revoke
+            account: The account to revoke the role from
+        """
         self._check_role(self._get_role_admin(role))
         self._revoke_role(role, account)
 
@@ -83,9 +96,9 @@ class AccessControl(ARC4Contract):
     def renounce_role(self, role: Bytes32) -> None:
         """Revokes a role from the caller
 
-          Args:
-              role: The role to renounce
-          """
+        Args:
+            role: The role to renounce
+        """
         self._revoke_role(role, Address(Txn.sender))
 
     @subroutine
